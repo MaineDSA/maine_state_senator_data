@@ -8,7 +8,7 @@ class LegislatureURL(ABC):
     MunicipalityListPath: str
 
 
-class HouseURL(LegislatureURL):
-    """Class representing the URL structure of Maine State House Representate list."""
+class SenateURL(LegislatureURL):
+    """Class representing the URL structure of Maine State Senator list."""
 
-    MunicipalityListPath = "/house/house/MemberProfiles/ListAlphaTown"
+    MunicipalityListPath = "/senate/find-your-state-senator/9392"

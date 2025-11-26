@@ -51,11 +51,20 @@ def extract_senator_from_string(text: str) -> tuple[str, str, str, str]:
 def extract_email_from_content(content_div: Tag, member: str) -> str:
     """Extract email address from senator profile content."""
     email_pattern = re.compile(r"Email", re.IGNORECASE)
+    email_regex = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+
     for p_tag in content_div.find_all("p"):
         if email_pattern.search(p_tag.get_text()):
+            # First try to find email in a mailto link
             email_link = p_tag.find("a", href=re.compile(r"^mailto:"))
             if email_link and isinstance(email_link, Tag):
                 return email_link.get_text().strip()
+
+            # If no link, find email in plain text with regex
+            text = p_tag.get_text()
+            email_match = re.search(email_regex, text)
+            if email_match:
+                return email_match.group().strip()
 
     logger.warning("Email not found for %s", member)
     return ""

@@ -3,14 +3,14 @@ import logging
 import re
 import time
 from pathlib import Path
-from urllib.parse import urlencode, urlunparse
+from urllib.parse import urlunparse
 
 import urllib3
-from bs4 import BeautifulSoup, PageElement, ResultSet, Tag
+from bs4 import BeautifulSoup, Tag
 from tqdm import tqdm
 from urllib3.util.retry import Retry
 
-from .legislature_urls import HouseURL
+from .legislature_urls import SenateURL
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,18 +19,25 @@ logger = logging.getLogger(__name__)
 REQUEST_DELAY = 2  # seconds between requests
 
 
-def extract_legislator_from_string(text: str) -> tuple[str, str, str, str]:
-    if "District" not in text:
+def extract_senator_from_string(text: str) -> tuple[str, str, str, str]:
+    """
+    Extract senator information from paragraph text.
+
+    Format: "Town - Senate District X - Name (Party-County)"
+    Returns: (district, town, member, party)
+    """
+    if "Senate District" not in text:
         return "", "", "", ""
 
     formatted_text = re.sub(r"[\r\n]", " ", text)
     formatted_text = re.sub(r"\s+", " ", formatted_text)
-    logger.debug("Extracting data from legislator string: %s", formatted_text)
+    logger.debug("Extracting data from senator string: %s", formatted_text)
 
-    # Extract town, district, and member name from the formatted string
-    match = re.match(r"([\W\w\s()-]+)\s*-\s*District\s+(\d+)\s*-\s*(.+?)\s*\((.+)\)", formatted_text)
+    # Extract town, district, member name, and party from the formatted string
+    # Pattern: Town - Senate District X - Name (Party-County)
+    match = re.match(r"([\W\w\s()-]+)\s*-\s*Senate District\s+(\d+)\s*-\s*(.+?)\s*\((.+?)-", formatted_text)
     if not match:
-        logger.error("Regex match not found, can't extract legislator district data")
+        logger.error("Regex match not found, can't extract senator district data")
         return "", "", "", ""
 
     town = match.group(1).strip()
@@ -41,111 +48,154 @@ def extract_legislator_from_string(text: str) -> tuple[str, str, str, str]:
     return district, town, member, party
 
 
-def scrape_committees(spans_medium: ResultSet) -> str:
-    committees = ""
-    for committees_tag in spans_medium:
-        if committees_tag and isinstance(committees_tag, Tag) and committees_tag.getText() == "Committee(s):":
-            committee_tag_1 = committees_tag.find_next("span").find_next("span")
-            committees = committee_tag_1.getText().strip()
-            committee_tag_2 = committee_tag_1.find_next_sibling("span")
-            if committee_tag_2:
-                committees = f"{committees}; {committee_tag_2.getText().strip()}"
-                committee_tag_3 = committee_tag_2.find_next_sibling("span")
-                if committee_tag_3:
-                    committees = f"{committees}; {committee_tag_3.getText().strip()}"
-    return committees
+def extract_email_from_content(content_div: Tag, member: str) -> str:
+    """Extract email address from senator profile content."""
+    email_pattern = re.compile(r"Email", re.IGNORECASE)
+    for p_tag in content_div.find_all("p"):
+        if email_pattern.search(p_tag.get_text()):
+            email_link = p_tag.find("a", href=re.compile(r"^mailto:"))
+            if email_link and isinstance(email_link, Tag):
+                return email_link.get_text().strip()
+
+    logger.warning("Email not found for %s", member)
+    return ""
 
 
-def scrape_detailed_legislator_info(http: urllib3.PoolManager, url: str, path: str, member: str) -> tuple[str, str, str]:
+def extract_phones_from_content(content_div: Tag, member: str) -> tuple[str, str]:
+    """
+    Extract phone numbers from senator profile content.
+
+    Returns: (home_phone, state_house_phone) as comma-separated strings
+    """
+    home_phones = []
+    cell_phones = []
+    state_house_phones = []
+
+    home_pattern = re.compile(r"Home", re.IGNORECASE)
+    cell_pattern = re.compile(r"Cell", re.IGNORECASE)
+    state_house_pattern = re.compile(r"State House", re.IGNORECASE)
+    phone_regex = r"\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}"
+
+    for p_tag in content_div.find_all("p"):
+        text = p_tag.get_text()
+
+        if home_pattern.search(text):
+            home_phones.extend(re.findall(phone_regex, text))
+        if cell_pattern.search(text):
+            cell_phones.extend(re.findall(phone_regex, text))
+        if state_house_pattern.search(text):
+            state_house_phones.extend(re.findall(phone_regex, text))
+
+    personal_phones = home_phones + cell_phones
+    home_phone = ", ".join(personal_phones) if personal_phones else ""
+    state_house_phone = ", ".join(state_house_phones) if state_house_phones else ""
+
+    if not home_phone and not state_house_phone:
+        logger.warning("Phone not found for %s", member)
+
+    return home_phone, state_house_phone
+
+
+def extract_committees_from_content(content_div: Tag) -> str:
+    """Extract committee assignments from senator profile content."""
+    committee_assignments_pattern = re.compile(r"Committee Assignments", re.IGNORECASE)
+    found_committee_section = False
+    committee_list = []
+
+    for p_tag in content_div.find_all("p"):
+        if committee_assignments_pattern.search(p_tag.get_text()):
+            found_committee_section = True
+            continue
+
+        if found_committee_section:
+            text = p_tag.get_text().strip()
+            if not text or p_tag.find("strong"):
+                break
+            committee_list.append(text)
+
+    return "; ".join(committee_list)
+
+
+def scrape_detailed_senator_info(http: urllib3.PoolManager, url: str, path: str, member: str) -> tuple[str, str, str, str]:
+    """
+    Scrape detailed information from a senator's profile page.
+
+    Returns: (email, home_phone, state_house_phone, committees)
+    """
     time.sleep(REQUEST_DELAY)  # Rate limiting
 
     url = urlunparse(("https", url, path, "", "", ""))
-    logger.debug("Getting legislator data from URL: %s", url)
+    logger.debug("Getting senator data from URL: %s", url)
     response = http.request("GET", url)
     soup = BeautifulSoup(response.data, "html.parser")
 
-    main_info = soup.find("div", id="main-info")
-    if not main_info or not isinstance(main_info, Tag):
-        return "", "", ""
+    content_div = soup.find("div", id="content")
+    if not content_div or not isinstance(content_div, Tag):
+        return "", "", "", ""
 
-    info_paragraph = main_info.find("p")
-    if not info_paragraph or not isinstance(info_paragraph, Tag):
-        return "", "", ""
+    email = extract_email_from_content(content_div, member)
+    home_phone, state_house_phone = extract_phones_from_content(content_div, member)
+    committees = extract_committees_from_content(content_div)
 
-    spans_medium = main_info.find_all("span", class_="font_weight_m")
-    committees = scrape_committees(spans_medium)
-
-    email = ""
-    email_tag = info_paragraph.find("a", href=True)
-    if not email_tag or not isinstance(email_tag, Tag):
-        warn = f"Email not found for {member}"
-        logger.warning(warn)
-    else:
-        email = email_tag.getText().strip()
-
-    phone = ""
-    phone_possible = info_paragraph.find("span", class_="text_right")
-    if not phone_possible:
-        return email, phone, committees
-    for phone_tag in phone_possible:
-        if not isinstance(phone_tag, PageElement):
-            continue
-        phone = phone_tag.getText().strip()
-        return email, phone, committees
-
-    warn = f"Phone not found for {member}"
-    logger.warning(warn)
-    return email, phone, committees
+    return email, home_phone, state_house_phone, committees
 
 
-def parse_legislators_page(http: urllib3.PoolManager, value: str, query: str = "selectedLetter") -> list[tuple[str, str, str, str, str, str, str]]:
-    page_url = urlunparse(("https", HouseURL.StateLegislatureNetloc, HouseURL.MunicipalityListPath, "", urlencode({query: value}), ""))
+def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str, str, str, str]]:
+    """
+    Parse the single-page Senate listing.
+
+    Returns list of tuples: (district, town, member, party, email, home_phone, state_house_phone, committees)
+    """
+    page_url = urlunparse(("https", SenateURL.StateLegislatureNetloc, SenateURL.MunicipalityListPath, "", "", ""))
     response = http.request("GET", page_url)
     soup = BeautifulSoup(response.data, "html.parser")
 
-    table_tag = soup.find("table", class_="short-table white")
-    if not table_tag or not isinstance(table_tag, Tag):
+    content_div = soup.find("div", id="content")
+    if not content_div or not isinstance(content_div, Tag):
         return []
 
-    legislators: list = []
-    for table_row_tag in tqdm(table_tag.find_all("tr")[2:], unit="legislator", leave=False):  # Skip first 2 rows (header)
-        row_cell = table_row_tag.find("td", class_="short-tabletdlf")
-        district, town, member, party = extract_legislator_from_string(row_cell.get_text())
-        row_link = table_row_tag.find("a", class_="btn btn-default", href=True)
-        email, phone, committees = scrape_detailed_legislator_info(http, HouseURL.StateLegislatureNetloc, row_link["href"], member)
-        legislators.append((district, town, member, party, email, phone, committees))
+    senators: list = []
 
-    return legislators
+    # Find all paragraph tags containing senator information
+    for p_tag in tqdm(content_div.find_all("p"), unit="entry", leave=False):
+        text = p_tag.get_text()
 
+        if "Senate District" not in text:
+            logger.debug("Senate District not found in string: %s", text)
+            continue
 
-def get_pagination(http: urllib3.PoolManager) -> list[str]:
-    list_url = urlunparse(("https", HouseURL.StateLegislatureNetloc, HouseURL.MunicipalityListPath, "", "", ""))
-    response = http.request("GET", list_url)
-    soup = BeautifulSoup(response.data, "html.parser")
-    pages = soup.find("ul", class_="pagination")
-    if not pages or not isinstance(pages, Tag):
-        return []
+        district, town, member, party = extract_senator_from_string(text)
 
-    return [page.get_text() for page in pages.find_all("a")]
+        if not district or not member:
+            logger.debug("district and member name not found in string: %s", text)
+            continue
+
+        senator_link = p_tag.find("a", href=True)
+        if not senator_link or not isinstance(senator_link, Tag):
+            logger.warning("No link found for %s", member)
+            senators.append((district, town, member, party, "", "", "", ""))
+            continue
+
+        email, home_phone, state_house_phone, committees = scrape_detailed_senator_info(http, SenateURL.StateLegislatureNetloc, senator_link["href"], member)
+
+        senators.append((district, town, member, party, email, home_phone, state_house_phone, committees))
+
+    return senators
 
 
 def main() -> None:
-    # Configure retry strategy
     retry_strategy = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504], respect_retry_after_header=True)
-
-    # Create a PoolManager with retry strategy
     http = urllib3.PoolManager(retries=retry_strategy)
 
-    letters = get_pagination(http)
-    pages = [parse_legislators_page(http, letter) for letter in tqdm(letters, unit="page")]
+    logger.info("Scraping Senate data...")
+    senators = parse_senators_page(http)
 
-    with Path("district_data.csv").open(mode="w", newline="", encoding="utf-8") as file:
+    with Path("senate_district_data.csv").open(mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
-        writer.writerows([("District", "Town", "Member", "Party", "Email", "Phone", "Committees")])
-        for page in pages:
-            writer.writerows(page)
+        writer.writerows([("District", "Town", "Member", "Party", "Email", "Home Phone", "State House Phone", "Committees")])
+        writer.writerows(senators)
 
-    logger.info("CSV file 'district_data.csv' has been created.")
+    logger.info("CSV file 'senate_district_data.csv' has been created with %s senators.", len(senators))
 
 
 if __name__ == "__main__":

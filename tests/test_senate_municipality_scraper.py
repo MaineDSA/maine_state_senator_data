@@ -169,12 +169,17 @@ class TestExtractPhonesFromContent:
                 "(207) 287-1515",
             ),
             (
+                "<p><b>Home</b>: 207-323-9976 or 207-587-9347</p><p><strong>State House</strong>: 207.287.1515</p>",
+                "207-323-9976, 207-587-9347",
+                "207.287.1515",
+            ),
+            (
                 "<p><b>Home</b>: 207-323-9976</p><p><strong>State House</strong>: 207.287.1515</p>",
                 "207-323-9976",
                 "207.287.1515",
             ),
         ],
-        ids=["basic_phones", "cell_grouped_with_home", "various_formats"],
+        ids=["basic_phones", "cell_grouped_with_home", "multiple phones of same type", "various_formats"],
     )
     def test_phone_extraction(self, parse_html_content: Callable, html: str, expected_home: str, expected_state_house: str) -> None:
         """Test extraction of phone numbers from various HTML formats."""

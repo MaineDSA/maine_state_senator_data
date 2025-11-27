@@ -31,7 +31,7 @@ def extract_senator_from_string(text: str) -> tuple[str, str, str, str]:
 
     formatted_text = re.sub(r"[\r\n]", " ", text)
     formatted_text = re.sub(r"\s+", " ", formatted_text)
-    logger.debug("Extracting data from senator string: %s", formatted_text)
+    logger.debug("Extracting data from municipality string: %s", formatted_text)
 
     # Extract town, district, member name, and party from the formatted string
     # Pattern: Town - Senate District X - Name (Party-County)
@@ -157,7 +157,7 @@ def scrape_detailed_senator_info(http: urllib3.PoolManager, url: str, path: str,
 
 def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str, str, str, str]]:
     """
-    Parse the single-page Senate listing.
+    Load and parse the single-page State Senate listing of all municipalities.
 
     Returns list of tuples: (district, town, member, party, email, home_phone, state_house_phone, committees)
     """
@@ -172,7 +172,7 @@ def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, 
     senators: list = []
 
     # Find all paragraph tags containing senator information
-    for p_tag in tqdm(content_div.find_all("p"), unit="entry", leave=False):
+    for p_tag in tqdm(content_div.find_all("p"), unit="municipality", leave=False):
         text = p_tag.get_text()
 
         if "Senate District" not in text:
@@ -202,7 +202,7 @@ def main() -> None:
     retry_strategy = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504], respect_retry_after_header=True)
     http = urllib3.PoolManager(retries=retry_strategy)
 
-    logger.info("Scraping Senate data...")
+    logger.info("Scraping Senate munucipality data...")
     senators = parse_senators_page(http)
 
     with Path("senate_district_data.csv").open(mode="w", newline="", encoding="utf-8") as file:
@@ -210,7 +210,7 @@ def main() -> None:
         writer.writerows([("District", "Town", "Member", "Party", "Email", "Home Phone", "State House Phone", "Committees")])
         writer.writerows(senators)
 
-    logger.info("CSV file 'senate_district_data.csv' has been created with %s senators.", len(senators))
+    logger.info("CSV file 'senate_district_data.csv' has been created with %s municipalities.", len(senators))
 
 
 if __name__ == "__main__":

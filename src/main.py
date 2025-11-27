@@ -2,6 +2,7 @@ import csv
 import logging
 import re
 import time
+from collections import Counter
 from pathlib import Path
 from urllib.parse import urlunparse
 
@@ -165,11 +166,11 @@ def scrape_detailed_senator_info(http: urllib3.PoolManager, url: str, path: str,
     return email, home_phone, state_house_phone, committees
 
 
-def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str, str, str, str]]:
+def collect_municipalities_with_senators(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str]]:
     """
-    Load and parse the single-page State Senate listing of all municipalities.
+    Collect all municipalities with their senator info and profile links.
 
-    Returns list of tuples: (district, town, member, party, email, home_phone, state_house_phone, committees)
+    Returns list of tuples: (district, town, member, party, profile_link)
     """
     page_url = urlunparse(("https", SenateURL.StateLegislatureNetloc, SenateURL.MunicipalityListPath, "", "", ""))
     response = http.request("GET", page_url)
@@ -179,10 +180,10 @@ def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, 
     if not content_div or not isinstance(content_div, Tag):
         return []
 
-    senators: list = []
+    municipalities = []
 
     # Find all paragraph tags containing senator information
-    for p_tag in tqdm(content_div.find_all("p"), unit="municipality", leave=False):
+    for p_tag in content_div.find_all("p"):
         text = p_tag.get_text()
 
         if "Senate District" not in text:
@@ -196,13 +197,77 @@ def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, 
             continue
 
         senator_link = p_tag.find("a", href=True)
-        if not senator_link or not isinstance(senator_link, Tag):
-            logger.warning("No link found for %s", member)
-            senators.append((district, town, member, party, "", "", "", ""))
+        profile_link = senator_link["href"] if senator_link and isinstance(senator_link, Tag) else ""
+
+        municipalities.append((district, town, member, party, profile_link))
+
+    return municipalities
+
+
+def get_unique_senators_with_links(municipalities: list[tuple[str, str, str, str, str]]) -> dict[str, str]:
+    """
+    Get unique senators with their most common profile link.
+
+    Returns dict mapping senator name to profile link
+    """
+    senator_links: dict[str, list[str]] = {}
+
+    for _district, _town, member, _party, profile_link in municipalities:
+        if member not in senator_links:
+            senator_links[member] = []
+        if profile_link:
+            senator_links[member].append(profile_link)
+
+    # For each senator, choose the most common link as there are typos sometimes
+    unique_senators = {}
+    for member, links in senator_links.items():
+        if links:
+            most_common_link = Counter(links).most_common(1)[0][0]
+            unique_senators[member] = most_common_link
+        else:
+            unique_senators[member] = ""
+
+    return unique_senators
+
+
+def scrape_all_unique_senators(http: urllib3.PoolManager, unique_senators: dict[str, str]) -> dict[str, tuple[str, str, str, str]]:
+    """
+    Scrape detailed info for all unique senators.
+
+    Returns dict mapping senator name to (email, home_phone, state_house_phone, committees)
+    """
+    senator_details = {}
+
+    logger.info("Scraping %d unique senator profiles...", len(unique_senators))
+    for member, profile_link in tqdm(unique_senators.items(), unit="senator"):
+        if not profile_link:
+            logger.warning("No profile link for %s", member)
+            senator_details[member] = ("", "", "", "")
             continue
 
-        email, home_phone, state_house_phone, committees = scrape_detailed_senator_info(http, SenateURL.StateLegislatureNetloc, senator_link["href"], member)
+        email, home_phone, state_house_phone, committees = scrape_detailed_senator_info(http, SenateURL.StateLegislatureNetloc, profile_link, member)
+        senator_details[member] = (email, home_phone, state_house_phone, committees)
 
+    return senator_details
+
+
+def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str, str, str, str]]:
+    """
+    Load and parse the single-page State Senate listing of all municipalities.
+
+    Returns list of tuples: (district, town, member, party, email, home_phone, state_house_phone, committees)
+    """
+    logger.info("Scraping Senate municipality data...")
+    municipalities = collect_municipalities_with_senators(http)
+    unique_senators = get_unique_senators_with_links(municipalities)
+    logger.info("Found %d unique senators across %d municipalities", len(unique_senators), len(municipalities))
+    logger.info("Scraping Senator profiles data...")
+    senator_details = scrape_all_unique_senators(http, unique_senators)
+
+    senators = []
+    for district, town, member, party, _profile_link in municipalities:
+        details = senator_details.get(member, ("", "", "", ""))
+        email, home_phone, state_house_phone, committees = details
         senators.append((district, town, member, party, email, home_phone, state_house_phone, committees))
 
     return senators
@@ -211,16 +276,14 @@ def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, 
 def main() -> None:
     retry_strategy = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504], respect_retry_after_header=True)
     http = urllib3.PoolManager(retries=retry_strategy)
-
-    logger.info("Scraping Senate munucipality data...")
     senators = parse_senators_page(http)
 
-    with Path("senate_district_data.csv").open(mode="w", newline="", encoding="utf-8") as file:
+    with Path("senate_municipality_data.csv").open(mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerows([("District", "Town", "Member", "Party", "Email", "Home Phone", "State House Phone", "Committees")])
         writer.writerows(senators)
 
-    logger.info("CSV file 'senate_district_data.csv' has been created with %s municipalities.", len(senators))
+    logger.info("CSV file 'senate_municipality_data.csv' has been created with %s municipalities.", len(senators))
 
 
 if __name__ == "__main__":

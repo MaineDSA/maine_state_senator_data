@@ -142,6 +142,12 @@ def scrape_detailed_senator_info(http: urllib3.PoolManager, url: str, path: str,
     if not content_div or not isinstance(content_div, Tag):
         return "", "", "", ""
 
+    # Check if this is the 404 page
+    h1_tag = content_div.find("h1")
+    if h1_tag and "Page Not Found" in h1_tag.get_text():
+        logger.warning("404 Page Not Found encountered for %s at URL: %s", member, url)
+        return "", "", "", ""
+
     email = extract_email_from_content(content_div, member)
     home_phone, state_house_phone = extract_phones_from_content(content_div, member)
     committees = extract_committees_from_content(content_div)

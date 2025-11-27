@@ -55,10 +55,20 @@ def extract_email_from_content(content_div: Tag, member: str) -> str:
 
     for p_tag in content_div.find_all("p"):
         if email_pattern.search(p_tag.get_text()):
-            # First try to find email in a mailto link
-            email_link = p_tag.find("a", href=re.compile(r"^mailto:"))
+            # First try to find email in a mailto link (allow optional space after mailto:)
+            email_link = p_tag.find("a", href=re.compile(r"^mailto:\s*"))
             if email_link and isinstance(email_link, Tag):
-                return email_link.get_text().strip()
+                email_text = email_link.get_text().strip()
+                # Validate it's actually an email address
+                if re.match(email_regex, email_text):
+                    return email_text
+                # If link text isn't email, try extracting from href
+                href = email_link.get("href", "")
+                if isinstance(href, str):
+                    # Remove 'mailto:' prefix and any whitespace
+                    email_from_href = re.sub(r"^mailto:\s*", "", href).strip()
+                    if re.match(email_regex, email_from_href):
+                        return email_from_href
 
             # If no link, find email in plain text with regex
             text = p_tag.get_text()

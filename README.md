@@ -4,4 +4,4 @@
 [![Update CSV](https://github.com/MaineDSA/maine_state_senator_data/actions/workflows/update-data.yml/badge.svg)](https://github.com/MaineDSA/maine_state_senator_data/actions/workflows/update-data.yml)
 
 # maine_state_senator_data
-Maine senators by district and town
+Maine state senators by district and town

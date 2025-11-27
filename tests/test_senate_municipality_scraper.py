@@ -49,7 +49,7 @@ class TestExtractSenatorFromString:
     """Tests for extract_senator_from_string function."""
 
     @pytest.mark.parametrize(
-        ("input_str","expected"),
+        ("input_str", "expected"),
         [
             (
                 "Bailey Island - Senate District 23 - Matthea E.L. Daughtry (D-Cumberland)",
@@ -117,7 +117,7 @@ class TestExtractEmailFromContent:
     """Tests for extract_email_from_content function."""
 
     @pytest.mark.parametrize(
-        ("html","expected_email"),
+        ("html", "expected_email"),
         [
             (
                 '<p><strong>Email</strong>: <a href="mailto:Chip.Curry@legislature.maine.gov">Chip.Curry@legislature.maine.gov</a></p>',
@@ -156,7 +156,7 @@ class TestExtractPhonesFromContent:
     """Tests for extract_phones_from_content function."""
 
     @pytest.mark.parametrize(
-        ("html","expected_home","expected_state_house"),
+        ("html", "expected_home", "expected_state_house"),
         [
             (
                 "<p><b>Home</b>: (207) 323-9976</p><p><strong>State House</strong>: (207) 287-1515</p>",
@@ -201,7 +201,7 @@ class TestExtractCommitteesFromContent:
     """Tests for extract_committees_from_content function."""
 
     @pytest.mark.parametrize(
-        ("html","expected"),
+        ("html", "expected"),
         [
             (
                 """
@@ -248,7 +248,7 @@ class TestScrapeDetailedSenatorInfo:
     """Tests for scrape_detailed_senator_info function."""
 
     @pytest.mark.parametrize(
-        ("html","expected"),
+        ("html", "expected"),
         [
             (
                 """
@@ -335,7 +335,7 @@ class TestCollectMunicipalitiesWithSenators:
     """Tests for collect_municipalities_with_senators function."""
 
     @pytest.mark.parametrize(
-        ("html_content","expected_results"),
+        ("html_content", "expected_results"),
         [
             (
                 """

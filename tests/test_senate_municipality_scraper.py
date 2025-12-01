@@ -309,7 +309,7 @@ class TestGetUniqueSenatorsWithLinks:
 
         result = get_unique_senators_with_links(municipalities)
 
-        assert len(result) == 2  #  noqa: PLR2004
+        assert len(result) == 2
         assert result["Matthea E.L. Daughtry"] == "/district23"
         assert result["Russell J. Black"] == "/district5"
 

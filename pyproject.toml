@@ -1,6 +1,6 @@
 [project]
 name = "maine_state_senator_data"
-version = "1.0.0"
+version = "1.1.0"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { "file" = "LICENSE" }
@@ -26,7 +26,18 @@ dev = [
     "types-tqdm==4.67.0.20250809"
 ]
 
+[project.scripts]
+maine_state_senator_data = "src.main:main"
+
+[build-system]
+requires = ["setuptools>=80.0"]
+build-backend = "setuptools.build_meta"
+
 [tool]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
 
 [tool.ruff]
 line-length = 160

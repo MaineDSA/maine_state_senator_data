@@ -128,15 +128,35 @@ class TestExtractEmailFromContent:
                 "senator@legislature.maine.gov",
             ),
             (
+                '<p><strong>Email</strong>: <a href="mailto:senator@legislature.maine.gov ">senator@legislature.maine.gov</a></p>',
+                "senator@legislature.maine.gov",
+            ),
+            (
                 "<p><strong>Email</strong>: test.senator@legislature.maine.gov</p>",
                 "test.senator@legislature.maine.gov",
+            ),
+            (
+                "<p><strong>Email</strong>: test.senator [at] legislature.maine.gov</p>",
+                "",
+            ),
+            (
+                '<p><strong>Email</strong>: <a href="mailto:senator@legislature.maine.gov ">senator [at] legislature.maine.gov</a></p>',
+                "senator@legislature.maine.gov",
             ),
             (
                 '<p><strong>EMAIL</strong>: <a href="mailto:senator@legislature.maine.gov">senator@legislature.maine.gov</a></p>',
                 "senator@legislature.maine.gov",
             ),
         ],
-        ids=["mailto_link", "mailto_with_space", "plain_text", "case_insensitive"],
+        ids=[
+            "mailto_and_link",
+            "mailto_with_leading_space",
+            "mailto_with_trailing_space",
+            "plain_text",
+            "plain_text_invalid_email",
+            "mailto_without_text_email",
+            "case_insensitive",
+        ],
     )
     def test_email_extraction(self, parse_html_content: Callable, html: str, expected_email: str) -> None:
         """Test extraction of email from various HTML formats."""
@@ -261,6 +281,15 @@ class TestScrapeDetailedSenatorInfo:
             ),
             (
                 """
+                <div id="invalid_content">
+                    <h1>Page Not Found</h1>
+                    <p>The page you are looking for does not exist.</p>
+                </div>
+                """,
+                ("", "", "", ""),
+            ),
+            (
+                """
                 <div id="content">
                     <h1>Sen. Chip Curry (D-Waldo)</h1>
                     <p><strong>Email</strong>: <a href="mailto:Chip.Curry@legislature.maine.gov">Chip.Curry@legislature.maine.gov</a></p>
@@ -278,7 +307,7 @@ class TestScrapeDetailedSenatorInfo:
                 ),
             ),
         ],
-        ids=["404_page", "successful_scrape"],
+        ids=["404_page", "404_page_invalid_content", "successful_scrape"],
     )
     @patch("src.main.time.sleep")
     def test_scrape_senator_info(self, mock_sleep: Mock, mock_http_response: Callable, html: str, expected: tuple) -> None:  #  noqa: ARG002
@@ -363,8 +392,25 @@ class TestCollectMunicipalitiesWithSenators:
                 """,
                 [("4", "Abbot", "Stacey K. Guerin", "R", "/District4")],
             ),
+            (
+                """
+                <div id="content">
+                    <p>Abbot - Senate Area 4 - Stacey K. Guerin [R-Penobscot]</p>
+                    <p>Abbot - Senate District 8 - <a href="/District8">Kevin S. Guerin</a> (R-Brewer)</p>
+                </div>
+                """,
+                [("8", "Abbot", "Kevin S. Guerin", "R", "/District8")],
+            ),
+            (
+                """
+                <div id="invalid_content">
+                    <h1>Find your State Senator</h1>
+                </div>
+                """,
+                [],
+            ),
         ],
-        ids=("multiple_municipalities", "skips_non_senator_paragraphs"),
+        ids=("multiple_municipalities", "skips_non_senator_paragraphs", "invalid_senator_format", "invalid_content"),
     )
     def test_municipality_collection(self, mock_http_response: Callable, html_content: str, expected_results: list) -> None:
         """Test collection of municipalities with senator data."""

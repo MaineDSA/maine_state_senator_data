@@ -68,14 +68,14 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 13,Bremen,Cameron D. Reny,D,cameron.reny@legislature.maine.gov,,(207) 287-1515,Appropriations and Financial Affairs; Marine Resources
 10,Brewer,David G. Haggan,R,david.haggan@legislature.maine.gov,(207) 944-7471,(207) 287-1505,
 2,Bridgewater,Trey L. Stewart,R,Trey.Stewart@Legislature.maine.gov,,(207) 287-1505,Senate Republican Minority Leader; Joint Rules; Senate Rules; Senate Conduct and Ethics
-18,Bridgton,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Bridgton,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 5,Brighton Plantation,Russell J. Black,R,Russell.Black@legislature.maine.gov,(207) 491-4667,(207) 287-1505,"Agriculture, Conservation, and Forestry; Senatorial Vote"
 13,Bristol,Cameron D. Reny,D,cameron.reny@legislature.maine.gov,,(207) 287-1515,Appropriations and Financial Affairs; Marine Resources
 7,Brooklin,Nicole C. Grohoski,D,Nicole.Grohoski@legislature.maine.gov,(207) 358-8333,(207) 287-1515,"Taxation (Chair); Energy, Utilities, and Technology; Engrossed Bills"
 11,Brooks,Chip Curry,D,Chip.Curry@legislature.maine.gov,(207) 323-9976,(207) 287-1515,Housing and Economic Development (Chair); Criminal Justice and Public Safety; Engrossed Bills; Senatorial Vote
 7,Brooksville,Nicole C. Grohoski,D,Nicole.Grohoski@legislature.maine.gov,(207) 358-8333,(207) 287-1515,"Taxation (Chair); Energy, Utilities, and Technology; Engrossed Bills"
 6,Brookton Township,Marianne Moore,R,Marianne.Moore@legislature.maine.gov,"(207) 454-0501, (207) 952-2050",(207) 287-1505,Health and Human Services; Marine Resources; Engrossed Bills
-18,Brownfield,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Brownfield,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 4,Brownville,Stacey K. Guerin,R,Stacey.Guerin@legislature.maine.gov,(207) 249-0472,(207) 287-1505,Inland Fisheries and Wildlife; Government Oversight; Bills in the Second Reading
 4,Brownville Junction,Stacey K. Guerin,R,Stacey.Guerin@legislature.maine.gov,(207) 249-0472,(207) 287-1505,Inland Fisheries and Wildlife; Government Oversight; Bills in the Second Reading
 23,Brunswick,Matthea E.L. Daughtry,D,Mattie.Daughtry@legislature.maine.gov,(207) 370-9871,(207) 287-1500,President of the Senate; Joint Rules; Senate Rules
@@ -151,7 +151,7 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 6,Deblois,Marianne Moore,R,Marianne.Moore@legislature.maine.gov,"(207) 454-0501, (207) 952-2050",(207) 287-1505,Health and Human Services; Marine Resources; Engrossed Bills
 10,Dedham,David G. Haggan,R,david.haggan@legislature.maine.gov,(207) 944-7471,(207) 287-1505,
 7,Deer Isle,Nicole C. Grohoski,D,Nicole.Grohoski@legislature.maine.gov,(207) 358-8333,(207) 287-1515,"Taxation (Chair); Energy, Utilities, and Technology; Engrossed Bills"
-18,Denmark,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Denmark,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 5,Dennistown Plantation,Russell J. Black,R,Russell.Black@legislature.maine.gov,(207) 491-4667,(207) 287-1505,"Agriculture, Conservation, and Forestry; Senatorial Vote"
 6,Dennysville,Marianne Moore,R,Marianne.Moore@legislature.maine.gov,"(207) 454-0501, (207) 952-2050",(207) 287-1505,Health and Human Services; Marine Resources; Engrossed Bills
 3,Detroit,Bradlee T. Farrin,R,Brad.Farrin@legislature.maine.gov,"(207) 634-3074, (207) 614-4123",(207) 287-1505,Transportation; Government Oversight
@@ -217,7 +217,7 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 1,Frenchville,Susan Bernard,R,susan.bernard@legislature.maine.gov,,(207) 287-1505,Appropriations and Financial Affairs
 12,Friendship,Pinny H. Beebe-Center,D,anne.beebe-center@legislature.maine.gov,,(207) 287-1515,Criminal Justice and Public Safety (Chair); State and Local Government
 26,Frye Island,Timothy E. Nangle,D,timothy.nangle@legislature.maine.gov,(207) 650-4407,(207) 287-1515,Transportation (Chair); Health and Human Services
-18,Fryeburg,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Fryeburg,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 14,Gardiner,Craig V. Hickman,D,Craig.Hickman@legislature.maine.gov,,(207) 287-1515,Veterans and Legal Affairs (Chair); Government Oversight (Chair); Senate Conduct and Ethics
 1,Garfield Plantation,Susan Bernard,R,susan.bernard@legislature.maine.gov,,(207) 287-1505,Appropriations and Financial Affairs
 4,Garland,Stacey K. Guerin,R,Stacey.Guerin@legislature.maine.gov,(207) 249-0472,(207) 287-1505,Inland Fisheries and Wildlife; Government Oversight; Bills in the Second Reading
@@ -251,11 +251,11 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 5,Harmony,Russell J. Black,R,Russell.Black@legislature.maine.gov,(207) 491-4667,(207) 287-1505,"Agriculture, Conservation, and Forestry; Senatorial Vote"
 23,Harpswell,Matthea E.L. Daughtry,D,Mattie.Daughtry@legislature.maine.gov,(207) 370-9871,(207) 287-1500,President of the Senate; Joint Rules; Senate Rules
 6,Harrington,Marianne Moore,R,Marianne.Moore@legislature.maine.gov,"(207) 454-0501, (207) 952-2050",(207) 287-1505,Health and Human Services; Marine Resources; Engrossed Bills
-18,Harrison,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Harrison,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 19,Hartford,Joseph E. Martin,R,joseph.martin@legislature.maine.gov,,(207) 287-1505,Environment and Natural Resources; State and Local Government
 5,Hartland,Russell J. Black,R,Russell.Black@legislature.maine.gov,(207) 491-4667,(207) 287-1505,"Agriculture, Conservation, and Forestry; Senatorial Vote"
 2,Haynesville,Trey L. Stewart,R,Trey.Stewart@Legislature.maine.gov,,(207) 287-1505,Senate Republican Minority Leader; Joint Rules; Senate Rules; Senate Conduct and Ethics
-18,Hebron,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Hebron,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 9,Hermon,Joseph M. Baldacci,D,Joe.Baldacci@legislature.maine.gov,(207) 945-3333,(207) 287-1515,"Inland Fisheries and Wildlife (Chair); State and Local Government (Chair); Health Coverage, Insurance, and Financial Services"
 2,Hersey,Trey L. Stewart,R,Trey.Stewart@Legislature.maine.gov,,(207) 287-1505,Senate Republican Minority Leader; Joint Rules; Senate Rules; Senate Conduct and Ethics
 2,Herseytown Township,Trey L. Stewart,R,Trey.Stewart@Legislature.maine.gov,,(207) 287-1505,Senate Republican Minority Leader; Joint Rules; Senate Rules; Senate Conduct and Ethics
@@ -357,7 +357,7 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 2,Mattamiscontis Township,Trey L. Stewart,R,Trey.Stewart@Legislature.maine.gov,,(207) 287-1505,Senate Republican Minority Leader; Joint Rules; Senate Rules; Senate Conduct and Ethics
 2,Mattawamkeag,Trey L. Stewart,R,Trey.Stewart@Legislature.maine.gov,,(207) 287-1505,Senate Republican Minority Leader; Joint Rules; Senate Rules; Senate Conduct and Ethics
 2,Maxfield,Trey L. Stewart,R,Trey.Stewart@Legislature.maine.gov,,(207) 287-1505,Senate Republican Minority Leader; Joint Rules; Senate Rules; Senate Conduct and Ethics
-18,Mechanic Falls,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Mechanic Falls,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 6,Meddybemps,Marianne Moore,R,Marianne.Moore@legislature.maine.gov,"(207) 454-0501, (207) 952-2050",(207) 287-1505,Health and Human Services; Marine Resources; Engrossed Bills
 4,Medford,Stacey K. Guerin,R,Stacey.Guerin@legislature.maine.gov,(207) 249-0472,(207) 287-1505,Inland Fisheries and Wildlife; Government Oversight; Bills in the Second Reading
 13,Medomak,Cameron D. Reny,D,cameron.reny@legislature.maine.gov,,(207) 287-1515,Appropriations and Financial Affairs; Marine Resources
@@ -370,7 +370,7 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 2,Millinocket,Trey L. Stewart,R,Trey.Stewart@Legislature.maine.gov,,(207) 287-1505,Senate Republican Minority Leader; Joint Rules; Senate Rules; Senate Conduct and Ethics
 4,Milo,Stacey K. Guerin,R,Stacey.Guerin@legislature.maine.gov,(207) 249-0472,(207) 287-1505,Inland Fisheries and Wildlife; Government Oversight; Bills in the Second Reading
 19,Milton Township,Joseph E. Martin,R,joseph.martin@legislature.maine.gov,,(207) 287-1505,Environment and Natural Resources; State and Local Government
-18,Minot,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Minot,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 7,Minturn,Nicole C. Grohoski,D,Nicole.Grohoski@legislature.maine.gov,(207) 358-8333,(207) 287-1515,"Taxation (Chair); Energy, Utilities, and Technology; Engrossed Bills"
 2,Molunkus Township,Trey L. Stewart,R,Trey.Stewart@Legislature.maine.gov,,(207) 287-1505,Senate Republican Minority Leader; Joint Rules; Senate Rules; Senate Conduct and Ethics
 13,Monhegan Island Plantation,Cameron D. Reny,D,cameron.reny@legislature.maine.gov,,(207) 287-1515,Appropriations and Financial Affairs; Marine Resources
@@ -409,10 +409,10 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 34,North Berwick,Joseph E. Rafferty,D,Joe.Rafferty@legislature.maine.gov,(207) 590-9902,(207) 287-1515,Education and Cultural Affairs (Chair); Labor
 7,North Brooklin,Nicole C. Grohoski,D,Nicole.Grohoski@legislature.maine.gov,(207) 358-8333,(207) 287-1515,"Taxation (Chair); Energy, Utilities, and Technology; Engrossed Bills"
 5,North Franklin Township,Russell J. Black,R,Russell.Black@legislature.maine.gov,(207) 491-4667,(207) 287-1505,"Agriculture, Conservation, and Forestry; Senatorial Vote"
-18,North Fryeburg,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,North Fryeburg,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 12,North Haven,Pinny H. Beebe-Center,D,anne.beebe-center@legislature.maine.gov,,(207) 287-1515,Criminal Justice and Public Safety (Chair); State and Local Government
 19,North Jay,Joseph E. Martin,R,joseph.martin@legislature.maine.gov,,(207) 287-1505,Environment and Natural Resources; State and Local Government
-18,North Oxford,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,North Oxford,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 17,North Turner,Jeffrey L. Timberlake,R,Jeffrey.Timberlake@legislature.maine.gov,(207) 754-6000,(207) 287-1505,
 13,North Whitefield,Cameron D. Reny,D,cameron.reny@legislature.maine.gov,,(207) 287-1515,Appropriations and Financial Affairs; Marine Resources
 26,North Windham,Timothy D. Nangle,D,timothy.nangle@legislature.maine.gov,(207) 650-4407,(207) 287-1515,Transportation (Chair); Health and Human Services
@@ -420,7 +420,7 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 7,Northeast Harbor,Nicole C. Grohoski,D,Nicole.Grohoski@legislature.maine.gov,(207) 358-8333,(207) 287-1515,"Taxation (Chair); Energy, Utilities, and Technology; Engrossed Bills"
 6,Northfield,Marianne Moore,R,Marianne.Moore@legislature.maine.gov,"(207) 454-0501, (207) 952-2050",(207) 287-1505,Health and Human Services; Marine Resources; Engrossed Bills
 11,Northport,Chip Curry,D,Chip.Curry@legislature.maine.gov,(207) 323-9976,(207) 287-1515,Housing and Economic Development (Chair); Criminal Justice and Public Safety; Engrossed Bills; Senatorial Vote
-18,Norway,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Norway,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 2,Oakfield,Trey L. Stewart,R,Trey.Stewart@Legislature.maine.gov,,(207) 287-1505,Senate Republican Minority Leader; Joint Rules; Senate Rules; Senate Conduct and Ethics
 16,Oakland,Scott W. Cyrway,R,scott.cyrway@legislature.maine.gov,(207) 437-7787,(207) 287-1505,Criminal Justice and Public Safety; Bills in the Second Reading
 31,Ocean Park,Donna Bailey,D,Donna.Bailey@legislature.maine.gov,(207) 284-9962,(207) 287-1515,"Health Coverage, Insurance, and Financial Services (Chair); Housing and Economic Development; Senate Conduct and Ethics (Chair)"
@@ -437,14 +437,14 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 23,Orr's Island,Matthea E.L. Daughtry,D,Mattie.Daughtry@legislature.maine.gov,(207) 370-9871,(207) 287-1500,President of the Senate; Joint Rules; Senate Rules
 6,Osborn,Marianne Moore,R,Marianne.Moore@legislature.maine.gov,"(207) 454-0501, (207) 952-2050",(207) 287-1505,Health and Human Services; Marine Resources; Engrossed Bills
 10,Otis,David G. Haggan,R,david.haggan@legislature.maine.gov,(207) 944-7471,(207) 287-1505,
-18,Otisfield,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Otisfield,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 7,Otter Creek,Nicole C. Grohoski,D,Nicole.Grohoski@legislature.maine.gov,(207) 358-8333,(207) 287-1515,"Taxation (Chair); Energy, Utilities, and Technology; Engrossed Bills"
 12,Owls Head,Pinny H. Beebe-Center,D,anne.beebe-center@legislature.maine.gov,,(207) 287-1515,Criminal Justice and Public Safety (Chair); State and Local Government
 2,Oxbow Plantation,Trey L. Stewart,R,Trey.Stewart@Legislature.maine.gov,,(207) 287-1505,Senate Republican Minority Leader; Joint Rules; Senate Rules; Senate Conduct and Ethics
-18,Oxford,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Oxford,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 11,Palermo,Chip Curry,D,Chip.Curry@legislature.maine.gov,(207) 323-9976,(207) 287-1515,Housing and Economic Development (Chair); Criminal Justice and Public Safety; Engrossed Bills; Senatorial Vote
 3,Palmyra,Bradlee T. Farrin,R,Brad.Farrin@legislature.maine.gov,"(207) 634-3074, (207) 614-4123",(207) 287-1505,Transportation; Government Oversight
-18,Paris,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Paris,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 4,Parkman,Stacey K. Guerin,R,Stacey.Guerin@legislature.maine.gov,(207) 249-0472,(207) 287-1505,Inland Fisheries and Wildlife; Government Oversight; Bills in the Second Reading
 22,Parsonsfield,James D. Libby,R,james.libby@legislature.maine.gov,(207) 289-7413,(207) 287-1505,
 8,Passadumkeag,Michael Tipping,D,mike.tipping@legislature.maine.gov,,(207) 287-1515,Labor (Chair); Taxation; Government Oversight
@@ -549,8 +549,8 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 14,South Gardiner,Craig V. Hickman,D,Craig.Hickman@legislature.maine.gov,,(207) 287-1515,Veterans and Legal Affairs (Chair); Government Oversight (Chair); Senate Conduct and Ethics
 23,South Harpswell,Matthea E.L. Daughtry,D,Mattie.Daughtry@legislature.maine.gov,(207) 370-9871,(207) 287-1500,President of the Senate; Joint Rules; Senate Rules
 22,South Hiram,James D. Libby,R,james.libby@legislature.maine.gov,(207) 289-7413,(207) 287-1505,
-18,South Oxford,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
-18,South Paris,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,South Oxford,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
+18,South Paris,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 29,South Portland,Anne M. Carney,D,Anne.Carney@legislature.maine.gov,(207) 767-7404,(207) 287-1515,
 12,South Thomaston,Pinny H. Beebe-Center,D,anne.beebe-center@legislature.maine.gov,,(207) 287-1515,Criminal Justice and Public Safety (Chair); State and Local Government
 33,South Waterboro,Matthew A. Harrington,R,matthew.harrington@legislature.maine.gov,,(207) 287-1505,
@@ -587,7 +587,7 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 7,Surry,Nicole C. Grohoski,D,Nicole.Grohoski@legislature.maine.gov,(207) 358-8333,(207) 287-1515,"Taxation (Chair); Energy, Utilities, and Technology; Engrossed Bills"
 7,Swan's Island,Nicole C. Grohoski,D,Nicole.Grohoski@legislature.maine.gov,(207) 358-8333,(207) 287-1515,"Taxation (Chair); Energy, Utilities, and Technology; Engrossed Bills"
 11,Swanville,Chip Curry,D,Chip.Curry@legislature.maine.gov,(207) 323-9976,(207) 287-1515,Housing and Economic Development (Chair); Criminal Justice and Public Safety; Engrossed Bills; Senatorial Vote
-18,Sweden,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Sweden,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 6,Talmadge,Marianne Moore,R,Marianne.Moore@legislature.maine.gov,"(207) 454-0501, (207) 952-2050",(207) 287-1505,Health and Human Services; Marine Resources; Engrossed Bills
 19,Temple,Joseph E. Martin,R,joseph.martin@legislature.maine.gov,,(207) 287-1505,Environment and Natural Resources; State and Local Government
 12,Tenants Harbor,Pinny H. Beebe-Center,D,anne.beebe-center@legislature.maine.gov,,(207) 287-1515,Criminal Justice and Public Safety (Chair); State and Local Government
@@ -627,7 +627,7 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 13,Washington,Cameron D. Reny,D,cameron.reny@legislature.maine.gov,,(207) 287-1515,Appropriations and Financial Affairs; Marine Resources
 19,Washington Township,Joseph E. Martin,R,joseph.martin@legislature.maine.gov,,(207) 287-1505,Environment and Natural Resources; State and Local Government
 33,Waterboro,Matthew A. Harrington,R,matthew.harrington@legislature.maine.gov,,(207) 287-1505,
-18,Waterford,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,Waterford,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 16,Waterville,Scott W. Cyrway,R,scott.cyrway@legislature.maine.gov,(207) 437-7787,(207) 287-1505,Criminal Justice and Public Safety; Bills in the Second Reading
 14,Wayne,Craig V. Hickman,D,Craig.Hickman@legislature.maine.gov,,(207) 287-1515,Veterans and Legal Affairs (Chair); Government Oversight (Chair); Senate Conduct and Ethics
 8,Webster Plantation,Michael Tipping,D,mike.tipping@legislature.maine.gov,,(207) 287-1515,Labor (Chair); Taxation; Government Oversight
@@ -644,7 +644,7 @@ District,Town,Member,Party,Email,Home Phone,State House Phone,Committees
 5,West Forks Plantation,Russell J. Black,R,Russell.Black@legislature.maine.gov,(207) 491-4667,(207) 287-1505,"Agriculture, Conservation, and Forestry; Senatorial Vote"
 14,West Gardiner,Craig V. Hickman,D,Craig.Hickman@legislature.maine.gov,,(207) 287-1515,Veterans and Legal Affairs (Chair); Government Oversight (Chair); Senate Conduct and Ethics
 33,West Lebanon,Matthew A. Harrington,R,matthew.harrington@legislature.maine.gov,,(207) 287-1505,
-18,West Minot,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Senate Rules
+18,West Minot,Richard A. Bennett,I,Richard.Bennett@legislature.maine.gov,,(207) 287-1540,Housing and Economic Development; Senate Rules
 19,West Paris,Joseph E. Martin,R,joseph.martin@legislature.maine.gov,,(207) 287-1505,Environment and Natural Resources; State and Local Government
 19,West Peru,Joseph E. Martin,R,joseph.martin@legislature.maine.gov,,(207) 287-1505,Environment and Natural Resources; State and Local Government
 12,West Rockport,Pinny H. Beebe-Center,D,anne.beebe-center@legislature.maine.gov,,(207) 287-1515,Criminal Justice and Public Safety (Chair); State and Local Government

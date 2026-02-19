@@ -260,6 +260,11 @@ def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, 
     logger.info("Scraping Senate municipality data...")
     municipalities = collect_municipalities_with_senators(http)
     unique_senators = get_unique_senators_with_links(municipalities)
+
+    if not unique_senators:
+        err_msg = "0 results found."
+        raise Exception(err_msg)
+
     logger.info("Found %d unique senators across %d municipalities", len(unique_senators), len(municipalities))
     logger.info("Scraping Senator profiles data...")
     senator_details = scrape_all_unique_senators(http, unique_senators)

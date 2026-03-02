@@ -16,29 +16,27 @@ jobs:
 
         steps:
             - name: Harden runner
-              uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76
+              uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b
               with:
                   disable-sudo: true
                   egress-policy: audit
 
-            - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+            - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
 
-            - name: Set up Python 3.13
-              uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+            - uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098
               with:
-                  python-version: '3.13'
-                  cache: pip
-
-            - name: Install uv
-              uses: install-pinned/uv@0590ea0c73b1fdb765847c94975e71c97d9ad0b1
-
-            - name: Install module and dependencies
-              run: |
-                  uv pip install --system .
+                python-version: ${{ matrix.python-version }}
+                activate-environment: true
+                cache-dependency-glob: |
+                  **/pyproject.toml
+                  **/uv.lock
+    
+            - run: >-
+                uv sync
+                --upgrade
 
             - name: Run package
-              run: |
-                  maine_state_senator_data
+              run: maine_state_senator_data
 
             - name: Commit Changes
               uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9

@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup, Tag
 from tqdm import tqdm
 from urllib3.util.retry import Retry
 
-from .legislature_urls import SenateURL
+from src.legislature_urls import SenateURL
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:maine_state_senator_data:%(name)s:%(message)s")
 logger = logging.getLogger(__name__)

@@ -150,3 +150,7 @@ exclude_also = [
     'if __name__ == "__main__":',
     "asyncio\\.run\\(main\\(\\)\\)",
 ]
+
+[tool.mypy]
+local_partial_types = true
+strict_bytes = true

@@ -20,6 +20,10 @@ logger = logging.getLogger(__name__)
 REQUEST_DELAY = 5  # seconds between requests
 
 
+class SenatorScraperError(Exception):
+    """Exception class raised when scraper encounters unexpected data."""
+
+
 def extract_senator_from_string(text: str) -> tuple[str, str, str, str]:
     """
     Extract senator information from paragraph text.
@@ -263,7 +267,7 @@ def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, 
 
     if not unique_senators:
         err_msg = "0 results found."
-        raise Exception(err_msg)
+        raise SenatorScraperError(err_msg)
 
     logger.info("Found %d unique senators across %d municipalities", len(unique_senators), len(municipalities))
     logger.info("Scraping Senator profiles data...")

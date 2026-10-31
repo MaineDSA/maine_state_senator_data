@@ -19,6 +19,14 @@ logger = logging.getLogger(__name__)
 
 # Rate limiting configuration
 REQUEST_DELAY = 5  # seconds between requests
+FAILURE_CODES = [
+    HTTPStatus.TOO_MANY_REQUESTS,
+    HTTPStatus.INTERNAL_SERVER_ERROR,
+    HTTPStatus.BAD_GATEWAY,
+    HTTPStatus.SERVICE_UNAVAILABLE,
+    HTTPStatus.GATEWAY_TIMEOUT,
+]
+RETRY_STRATEGY = Retry(total=3, backoff_factor=1, status_forcelist=FAILURE_CODES, respect_retry_after_header=True)
 
 
 class SenatorScraperError(Exception):
@@ -151,7 +159,7 @@ def scrape_detailed_senator_info(http: urllib3.PoolManager, url: str, path: str,
 
     url = urlunparse(("https", url, path, "", "", ""))
     logger.debug("Getting senator data from URL: %s", url)
-    response = http.request("GET", url)
+    response = http.request("GET", url.lower())
     soup = BeautifulSoup(response.data, "html.parser")
 
     content_div = soup.find("div", id="content")
@@ -256,7 +264,7 @@ def scrape_all_unique_senators(http: urllib3.PoolManager, unique_senators: dict[
     return senator_details
 
 
-def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str, str, str, str]]:
+def scrape_all(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str, str, str, str]]:
     """
     Load and parse the single-page State Senate listing of all municipalities.
 
@@ -283,28 +291,25 @@ def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, 
     return senators
 
 
-def main() -> None:
-    retry_strategy = Retry(
-        total=3,
-        backoff_factor=1,
-        status_forcelist=[
-            HTTPStatus.TOO_MANY_REQUESTS,
-            HTTPStatus.INTERNAL_SERVER_ERROR,
-            HTTPStatus.BAD_GATEWAY,
-            HTTPStatus.SERVICE_UNAVAILABLE,
-            HTTPStatus.GATEWAY_TIMEOUT,
-        ],
-        respect_retry_after_header=True,
-    )
-    http = urllib3.PoolManager(retries=retry_strategy)
-    senators = parse_senators_page(http)
-
-    with Path("senate_municipality_data.csv").open(mode="w", newline="", encoding="utf-8") as file:
+def write_data(filename: str, column_names: tuple, senators: list[tuple]) -> None:
+    """Write collected data to a CSV file."""
+    column_count = len(column_names)
+    if all(len(senator_data) is column_count for senator_data in senators):
+        err_msg = f"All rows must have the same number of columns as `column_names` (len({column_names}))."
+        raise ValueError(err_msg)
+    with Path(filename).open(mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
-        writer.writerows([("District", "Town", "Member", "Party", "Email", "Home Phone", "State House Phone", "Committees")])
+        writer.writerows([column_names])
         writer.writerows(senators)
+    logger.info("CSV file '%s' has been created with %s municipalities.", filename, len(senators))
 
-    logger.info("CSV file 'senate_municipality_data.csv' has been created with %s municipalities.", len(senators))
+
+def main() -> None:
+    http = urllib3.PoolManager(retries=RETRY_STRATEGY)
+    senators = scrape_all(http)
+    output_filename = "senate_municipality_data.csv"
+    column_names = ("District", "Town", "Member", "Party", "Email", "Home Phone", "State House Phone", "Committees")
+    write_data(output_filename, column_names, senators)
 
 
 if __name__ == "__main__":

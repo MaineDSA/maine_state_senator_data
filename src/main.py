@@ -3,6 +3,7 @@ import logging
 import re
 import time
 from collections import Counter
+from http import HTTPStatus
 from pathlib import Path
 from urllib.parse import urlunparse
 
@@ -283,7 +284,18 @@ def parse_senators_page(http: urllib3.PoolManager) -> list[tuple[str, str, str, 
 
 
 def main() -> None:
-    retry_strategy = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504], respect_retry_after_header=True)
+    retry_strategy = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=[
+            HTTPStatus.TOO_MANY_REQUESTS,
+            HTTPStatus.INTERNAL_SERVER_ERROR,
+            HTTPStatus.BAD_GATEWAY,
+            HTTPStatus.SERVICE_UNAVAILABLE,
+            HTTPStatus.GATEWAY_TIMEOUT,
+        ],
+        respect_retry_after_header=True,
+    )
     http = urllib3.PoolManager(retries=retry_strategy)
     senators = parse_senators_page(http)
 

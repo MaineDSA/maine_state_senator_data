@@ -1,9 +1,10 @@
 from collections.abc import Callable
-from unittest.mock import Mock, patch
 
 import pytest
 import urllib3
 from bs4 import BeautifulSoup, Tag
+from pytest_mock import MockerFixture
+from pytest_urllib3 import Urllib3Mock
 
 from src.main import (
     collect_municipalities_with_senators,
@@ -18,8 +19,8 @@ from src.main import (
 
 # Fixtures for reusable components
 @pytest.fixture
-def parse_html_content() -> Callable:
-    """Fixture that returns a function to parse HTML and extract content div."""
+def parse_html_content() -> Callable[[str], Tag]:
+    """Parse HTML and extract content div."""
 
     def _parse(html: str) -> Tag:
         soup = BeautifulSoup(html, "html.parser")
@@ -32,15 +33,12 @@ def parse_html_content() -> Callable:
 
 
 @pytest.fixture
-def mock_http_response() -> Callable:
-    """Fixture for creating mock HTTP responses."""
+def mock_http_response(urllib3_mock: Urllib3Mock) -> Callable[[str], urllib3.PoolManager]:
+    """Create a urllib3 PoolManager with a mocked GET request."""
 
-    def _create_response(html_content: str) -> Mock:
-        mock_http = Mock(spec=urllib3.PoolManager)
-        mock_response = Mock()
-        mock_response.data = html_content.encode("utf-8")
-        mock_http.request.return_value = mock_response
-        return mock_http
+    def _create_response(html_content: str) -> urllib3.PoolManager:
+        urllib3_mock.add_response(method="GET", content=html_content.encode("utf-8"))
+        return urllib3.PoolManager()
 
     return _create_response
 
@@ -98,6 +96,7 @@ class TestExtractSenatorFromString:
     def test_valid_extraction(self, input_str: str, expected: tuple) -> None:
         """Test extraction of senator data from valid input strings."""
         result = extract_senator_from_string(input_str)
+
         assert result == expected
 
     @pytest.mark.parametrize(
@@ -110,7 +109,9 @@ class TestExtractSenatorFromString:
     )
     def test_invalid_extraction(self, input_str: str) -> None:
         """Test that empty tuple is returned for invalid input."""
-        assert extract_senator_from_string(input_str) == ("", "", "", "")
+        result = extract_senator_from_string(input_str)
+
+        assert result == ("", "", "", "")
 
 
 class TestExtractEmailFromContent:
@@ -158,13 +159,13 @@ class TestExtractEmailFromContent:
             "case_insensitive",
         ],
     )
-    def test_email_extraction(self, parse_html_content: Callable, html: str, expected_email: str) -> None:
+    def test_email_extraction(self, parse_html_content: Callable[[str], Tag], html: str, expected_email: str) -> None:
         """Test extraction of email from various HTML formats."""
         content_div = parse_html_content(f'<div id="content">{html}</div>')
         email = extract_email_from_content(content_div, "Test Senator")
         assert email == expected_email
 
-    def test_no_email_found(self, parse_html_content: Callable) -> None:
+    def test_no_email_found(self, parse_html_content: Callable[[str], Tag]) -> None:
         """Test that empty string is returned when no email is found."""
         html = '<div id="content"><p><strong>Phone</strong>: (207) 123-4567</p></div>'
         content_div = parse_html_content(html)
@@ -201,14 +202,14 @@ class TestExtractPhonesFromContent:
         ],
         ids=["basic_phones", "cell_grouped_with_home", "multiple phones of same type", "various_formats"],
     )
-    def test_phone_extraction(self, parse_html_content: Callable, html: str, expected_home: str, expected_state_house: str) -> None:
+    def test_phone_extraction(self, parse_html_content: Callable[[str], Tag], html: str, expected_home: str, expected_state_house: str) -> None:
         """Test extraction of phone numbers from various HTML formats."""
         content_div = parse_html_content(f'<div id="content">{html}</div>')
         home, state_house = extract_phones_from_content(content_div, "Test Senator")
         assert home == expected_home
         assert state_house == expected_state_house
 
-    def test_no_phones_found(self, parse_html_content: Callable) -> None:
+    def test_no_phones_found(self, parse_html_content: Callable[[str], Tag]) -> None:
         """Test that empty strings are returned when no phones are found."""
         html = '<div id="content"><p><strong>Email</strong>: senator@legislature.maine.gov</p></div>'
         content_div = parse_html_content(html)
@@ -250,17 +251,20 @@ class TestExtractCommitteesFromContent:
         ],
         ids=["multiple_committees", "stops_at_next_section", "case_insensitive"],
     )
-    def test_committee_extraction(self, parse_html_content: Callable, html: str, expected: str) -> None:
+    def test_committee_extraction(self, parse_html_content: Callable[[str], Tag], html: str, expected: str) -> None:
         """Test extraction of committee assignments."""
         content_div = parse_html_content(f'<div id="content">{html}</div>')
         committees = extract_committees_from_content(content_div)
+
         assert committees == expected
 
-    def test_no_committees_found(self, parse_html_content: Callable) -> None:
+    def test_no_committees_found(self, parse_html_content: Callable[[str], Tag]) -> None:
         """Test that empty string is returned when no committees are found."""
         html = '<div id="content"><p><strong>Email</strong>: senator@legislature.maine.gov</p></div>'
+
         content_div = parse_html_content(html)
         committees = extract_committees_from_content(content_div)
+
         assert committees == ""
 
 
@@ -309,10 +313,11 @@ class TestScrapeDetailedSenatorInfo:
         ],
         ids=["404_page", "404_page_invalid_content", "successful_scrape"],
     )
-    @patch("src.main.time.sleep")
-    def test_scrape_senator_info(self, mock_sleep: Mock, mock_http_response: Callable, html: str, expected: tuple) -> None:  #  noqa: ARG002
+    def test_scrape_senator_info(self, mocker: MockerFixture, mock_http_response: Callable[[str], urllib3.PoolManager], html: str, expected: tuple) -> None:
         """Test scraping of senator details from various page types."""
+        mocker.patch("src.main.time.sleep")
         mock_http = mock_http_response(html)
+
         result = scrape_detailed_senator_info(mock_http, "legislature.maine.gov", "/district1", "Test Senator")
 
         if expected == ("", "", "", ""):
@@ -351,12 +356,15 @@ class TestGetUniqueSenatorsWithLinks:
         ]
 
         result = get_unique_senators_with_links(municipalities)
+
         assert result["Russell J. Black"] == "/district5"
 
     def test_senator_with_no_link(self) -> None:
         """Test handling of senator with no profile link."""
         municipalities = [("5", "Town1", "Russell J. Black", "R", "")]
+
         result = get_unique_senators_with_links(municipalities)
+
         assert result["Russell J. Black"] == ""
 
 
@@ -412,15 +420,15 @@ class TestCollectMunicipalitiesWithSenators:
         ],
         ids=("multiple_municipalities", "skips_non_senator_paragraphs", "invalid_senator_format", "invalid_content"),
     )
-    def test_municipality_collection(self, mock_http_response: Callable, html_content: str, expected_results: list) -> None:
+    def test_municipality_collection(
+        self, mocker: MockerFixture, mock_http_response: Callable[[str], urllib3.PoolManager], html_content: str, expected_results: list
+    ) -> None:
         """Test collection of municipalities with senator data."""
+        mocker.patch("src.main.SenateURL.StateLegislatureNetloc", "legislature.maine.gov")
+        mocker.patch("src.main.SenateURL.MunicipalityListPath", "/find-senator")
         mock_http = mock_http_response(html_content)
 
-        with (
-            patch("src.main.SenateURL.StateLegislatureNetloc", "legislature.maine.gov"),
-            patch("src.main.SenateURL.MunicipalityListPath", "/find-senator"),
-        ):
-            result = collect_municipalities_with_senators(mock_http)
+        result = collect_municipalities_with_senators(mock_http)
 
         assert len(result) == len(expected_results)
         for i, expected in enumerate(expected_results):

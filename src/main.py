@@ -226,11 +226,11 @@ def get_unique_senators_with_links(municipalities: list[tuple[str, str, str, str
     # For each senator, choose the most common link as there are typos sometimes
     unique_senators = {}
     for member, links in senator_links.items():
+        unique_senators[member] = ""
         if links:
-            most_common_link = Counter(links).most_common(1)[0][0]
-            unique_senators[member] = most_common_link
-        else:
-            unique_senators[member] = ""
+            most_common_links = Counter(links).most_common(2)
+            best_link = most_common_links[0]  # tuple of most common link and # of occurrences
+            unique_senators[member] = best_link[0]
 
     return unique_senators
 

@@ -134,23 +134,10 @@ ignore = [
 
 [tool.pytest]
 addopts = ["-n", "auto", "--cov=src", "--no-cov-on-fail"]
-testpaths = [
-    "tests",
-]
+testpaths = ["tests"]
 
 [tool.coverage]
 
 [tool.coverage.run]
 branch = true
 relative_files = true
-
-[tool.coverage.report]
-exclude_also = [
-    "logger\\.",
-    'if __name__ == "__main__":',
-    "asyncio\\.run\\(main\\(\\)\\)",
-]
-
-[tool.mypy]
-local_partial_types = true
-strict_bytes = true

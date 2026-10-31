@@ -450,6 +450,7 @@ dev = [
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-recording" },
+    { name = "pytest-urllib3" },
     { name = "pytest-xdist" },
     { name = "ruff" },
     { name = "ssort" },
@@ -471,12 +472,14 @@ security = [
 test = [
     { name = "pytest" },
     { name = "pytest-recording" },
+    { name = "pytest-urllib3" },
     { name = "pytest-xdist" },
 ]
 test-coverage = [
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-recording" },
+    { name = "pytest-urllib3" },
     { name = "pytest-xdist" },
 ]
 types = [
@@ -499,6 +502,7 @@ dev = [
     { name = "pytest", specifier = ">=9.2" },
     { name = "pytest-cov", specifier = ">=7.1" },
     { name = "pytest-recording", specifier = ">=0.14.0" },
+    { name = "pytest-urllib3", specifier = ">=0.2" },
     { name = "pytest-xdist", specifier = ">=3.8.0" },
     { name = "ruff", specifier = "~=0.17.1" },
     { name = "ssort", specifier = ">=0.18" },
@@ -515,12 +519,14 @@ security = [{ name = "bandit", extras = ["sarif"], specifier = ">=1.9.4" }]
 test = [
     { name = "pytest", specifier = ">=9.2" },
     { name = "pytest-recording", specifier = ">=0.14.0" },
+    { name = "pytest-urllib3", specifier = ">=0.2" },
     { name = "pytest-xdist", specifier = ">=3.8.0" },
 ]
 test-coverage = [
     { name = "pytest", specifier = ">=9.2" },
     { name = "pytest-cov", specifier = ">=7.1" },
     { name = "pytest-recording", specifier = ">=0.14.0" },
+    { name = "pytest-urllib3", specifier = ">=0.2" },
     { name = "pytest-xdist", specifier = ">=3.8.0" },
 ]
 types = [
@@ -716,6 +722,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/5f/f1/0c995888c28d4c76c7b0efdafaa8e9f8f2337730c1ea8dc33329bc04dd2a/pytest_recording-0.14.0.tar.gz", hash = "sha256:175f62a71da36c0a019dbee47f92b9fa4c72dea18e215da1488282e8d4d08b35", size = 27084, upload-time = "2026-10-01T22:35:52.353Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/62/f1/7cb1ed94d6d37a585e28951a3f34af8bea09cd7c0cad562345b150489f60/pytest_recording-0.14.0-py3-none-any.whl", hash = "sha256:419f1a9325827987043d01a33a26dcafa69c1744521e1ed1ffa7c7b5fabc865c", size = 13879, upload-time = "2026-10-01T22:35:51.14Z" },
+]
+
+[[package]]
+name = "pytest-urllib3"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pytest" },
+    { name = "urllib3" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b0/f6/1674ea24af48ec944c484613142594e0c660b881823e3a31a9154d89ff2f/pytest_urllib3-0.2.0.tar.gz", hash = "sha256:f8eaf5b70ab05d9459bec4f70f1363f6a64ed9145f8cacec142299620006c3c7", size = 12755, upload-time = "2026-03-09T12:11:56.439Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0e/06/694fb100b5d458c34951204fb038340af8d1ad84899893d47294c1d49fd2/pytest_urllib3-0.2.0-py3-none-any.whl", hash = "sha256:0f46e4cb14c19898bb98ded223bfc9dc9fe0c045a9dbcbcf1f7779e290e602d0", size = 15079, upload-time = "2026-03-09T12:11:57.411Z" },
 ]
 
 [[package]]

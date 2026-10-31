@@ -130,6 +130,8 @@ ignore = [
 "**/{tests,docs}/*" = [
     "SLF001",  # private-member-access (SLF001)
     "PLR2004",  # magic-value-comparison (PLR2004)
+    "FBT001",  # boolean-type-hint-positional-argument (FBT001)
+    "FBT002",  # boolean-default-value-positional-argument (FBT002)
 ]
 
 [tool.pytest]

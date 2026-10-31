@@ -7,9 +7,9 @@ license = { "file" = "LICENSE" }
 authors = [{ "name" = "Ramona T", "email" = "ramona.t.dsa@pm.me" }]
 urls = { "GitHub" = "https://github.com/MaineDSA/maine_state_legislator_data" }
 dependencies = [
-    "beautifulsoup4~=4.15.0",
-    "tqdm~=4.70.1",
-    "urllib3~=2.8.0",
+    "beautifulsoup4>=4.15.0",
+    "tqdm>=4.70.1",
+    "urllib3>=2.8.0",
 ]
 
 [project.scripts]
@@ -31,28 +31,28 @@ dev = [
     {include-group = "types"},
 ]
 lint = [
-    "ruff==0.17.1",
-    "ssort==0.17.0",
+    "ruff~=0.17.1",
+    "ssort>=0.18",
 ]
 pre-commit = [
-    "pre-commit~=4.6.2",
+    "pre-commit>=4.6",
 ]
 security = [
-    "bandit[sarif]==1.9.4",
+    "bandit[sarif]>=1.9.4",
 ]
 test-coverage = [
-    "pytest-cov~=7.1.0",
+    "pytest-cov>=7.1",
     {include-group = "test"},
 ]
 test = [
-    "pytest~=9.1.1",
-    "pytest-recording~=0.14.0",
-    "pytest-xdist~=3.8.0",
+    "pytest>=9.2",
+    "pytest-recording>=0.14.0",
+    "pytest-xdist>=3.8.0",
 ]
 types = [
-    "ty>=0.0.84",
-    "types-beautifulsoup4~=4.12.0.20250516",
-    "types-tqdm~=4.70.0.20260906"
+    "ty>=0.0.95",
+    "types-beautifulsoup4>=4.12",
+    "types-tqdm>=4.70"
 ]
 
 [tool]

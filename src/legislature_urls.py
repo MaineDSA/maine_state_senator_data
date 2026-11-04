@@ -11,4 +11,4 @@ class LegislatureURL(ABC):
 class SenateURL(LegislatureURL):
     """Class representing the URL structure of Maine State Senator list."""
 
-    MunicipalityListPath = "/senate/find-your-state-senator/9392"
+    MunicipalityListPath = "senate-home-page/find-your-state-senator"

@@ -31,7 +31,7 @@ jobs:
                   **/pyproject.toml
                   **/uv.lock
     
-            - run: uv sync
+            - run: uv sync --locked
 
             - name: Run package
               run: maine_state_senator_data

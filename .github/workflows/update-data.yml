@@ -30,7 +30,7 @@ jobs:
                 cache-dependency-glob: |
                   **/pyproject.toml
                   **/uv.lock
-    
+
             - run: uv sync --locked
 
             - name: Run package

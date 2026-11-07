@@ -164,7 +164,7 @@ def scrape_detailed_senator_info(http: urllib3.PoolManager, url: str, path: str,
 
     url = urlunparse(("https", url, path, "", "", ""))
     logger.debug("Getting senator data from URL: %s", url)
-    response = http.request("GET", url.lower())
+    response = http.request("GET", url)
     soup = BeautifulSoup(response.data, "html.parser")
 
     content_div = soup.find("div", id="content")
@@ -241,7 +241,7 @@ def get_unique_senators_with_links(municipalities: list[tuple[str, str, str, str
             senator_links[member] = []
 
         if profile_link:
-            senator_links[member].append(profile_link)
+            senator_links[member].append(profile_link.lower())
 
     # For each senator, choose the most common link as there are typos sometimes
     unique_senators = {}
@@ -249,6 +249,9 @@ def get_unique_senators_with_links(municipalities: list[tuple[str, str, str, str
         unique_senators[member] = ""
         if links:
             most_common_links = Counter(links).most_common(2)
+            # if len(most_common_links) > 1 and (most_common_links[0][1] is most_common_links[1][1]):
+            #     err_msg = "URL conflict could not be resolved."
+            #     raise SenatorScraperError(err_msg)
             best_link = most_common_links[0]  # tuple of most common link and # of occurrences
             unique_senators[member] = best_link[0]
 
@@ -275,7 +278,7 @@ def scrape_all_unique_senators(http: urllib3.PoolManager, unique_senators: dict[
     return senator_details
 
 
-def scrape_all(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str, str, str, str]]:
+def scrape_all(http: urllib3.PoolManager) -> list[tuple[str, ...]]:
     """
     Load and parse the single-page State Senate listing of all municipalities.
 
@@ -295,18 +298,13 @@ def scrape_all(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str,
 
     senators = []
     for district, town, member, party, _profile_link in municipalities:
-        details = senator_details.get(member)
-        if not details:
-            err_msg = f"No details found for {member}."
-            raise SenatorScraperError(err_msg)
-
-        email, home_phone, state_house_phone, committees = details
-        senators.append((district, town, member, party, email, home_phone, state_house_phone, committees))
+        details = senator_details.get(member, {})
+        senators.append((district, town, member, party, *details))
 
     return senators
 
 
-def write_data(filename: str, column_names: list[str], senators: list[tuple[str, str, str, str, str, str, str, str]]) -> None:
+def write_data(filename: str, column_names: list[str], senators: list[tuple[str, ...]]) -> None:
     """Write collected data to a CSV file."""
     header_column_count = len(column_names)
     if not all(len(senator_data) == header_column_count for senator_data in senators):

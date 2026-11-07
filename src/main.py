@@ -41,7 +41,8 @@ def extract_senator_from_string(text: str) -> tuple[str, str, str, str]:
     Returns: (district, town, member, party)
     """
     if "Senate District" not in text:
-        return "", "", "", ""
+        err_msg = f"'Senate District' not found in '{text}'"
+        raise SenatorScraperError(err_msg)
 
     formatted_text = re.sub(r"[\r\n]", " ", text)
     formatted_text = re.sub(r"\s+", " ", formatted_text)
@@ -51,8 +52,8 @@ def extract_senator_from_string(text: str) -> tuple[str, str, str, str]:
     # Pattern: Town - Senate District X - Name (Party-County)
     match = re.match(r"([\W\w\s()-]+)\s*-\s*Senate District\s+(\d+)\s*-\s*(.+?)\s*\((.+?)-", formatted_text)
     if not match:
-        logger.error("Regex match not found, can't extract senator district data")
-        return "", "", "", ""
+        err_msg = f"Regex match not found, can't extract senator district data from '{formatted_text}'"
+        raise SenatorScraperError(err_msg)
 
     town = match.group(1).strip()
     district = match.group(2).strip()
@@ -76,6 +77,7 @@ def extract_email_from_content(content_div: Tag, member: str) -> str:
                 # Validate it's actually an email address
                 if re.match(email_regex, email_text):
                     return email_text
+
                 # If link text isn't email, try extracting from href
                 href = email_link.get("href", "")
                 if isinstance(href, str):
@@ -90,8 +92,8 @@ def extract_email_from_content(content_div: Tag, member: str) -> str:
             if email_match:
                 return email_match.group().strip()
 
-    logger.warning("Email not found for %s", member)
-    return ""
+    err_msg = f"Email not found for {member}"
+    raise SenatorScraperError(err_msg)
 
 
 def extract_phones_from_content(content_div: Tag, member: str) -> tuple[str, str]:
@@ -114,8 +116,10 @@ def extract_phones_from_content(content_div: Tag, member: str) -> tuple[str, str
 
         if home_pattern.search(text):
             home_phones.extend(re.findall(phone_regex, text))
+
         if cell_pattern.search(text):
             cell_phones.extend(re.findall(phone_regex, text))
+
         if state_house_pattern.search(text):
             state_house_phones.extend(re.findall(phone_regex, text))
 
@@ -144,6 +148,7 @@ def extract_committees_from_content(content_div: Tag) -> str:
             text = p_tag.get_text().strip()
             if not text or p_tag.find("strong"):
                 break
+
             committee_list.append(text)
 
     return "; ".join(committee_list)
@@ -164,13 +169,14 @@ def scrape_detailed_senator_info(http: urllib3.PoolManager, url: str, path: str,
 
     content_div = soup.find("div", id="content")
     if not content_div or not isinstance(content_div, Tag):
-        return "", "", "", ""
+        err_msg = "Content div not found."
+        raise SenatorScraperError(err_msg)
 
     # Check if this is the 404 page
     h1_tag = content_div.find("h1")
     if h1_tag and "Page Not Found" in h1_tag.get_text():
-        logger.warning("404 Page Not Found encountered for %s at URL: %s", member, url)
-        return "", "", "", ""
+        err_msg = f"404 Page Not Found encountered for {member} at URL: {url}"
+        raise SenatorScraperError(err_msg)
 
     email = extract_email_from_content(content_div, member)
     home_phone, state_house_phone = extract_phones_from_content(content_div, member)
@@ -191,12 +197,17 @@ def collect_municipalities_with_senators(http: urllib3.PoolManager) -> list[tupl
 
     content_div = soup.find("div", id="content")
     if not content_div or not isinstance(content_div, Tag):
-        return []
-
-    municipalities = []
+        err_msg = "Content div not found."
+        raise SenatorScraperError(err_msg)
 
     # Find all paragraph tags containing senator information
-    for p_tag in content_div.find_all("p"):
+    paragraphs = content_div.find_all("p")
+    if not paragraphs:
+        err_msg = "No paragraphs found within content div."
+        raise SenatorScraperError(err_msg)
+
+    municipalities = []
+    for p_tag in paragraphs:
         text = p_tag.get_text()
 
         if "Senate District" not in text:
@@ -228,6 +239,7 @@ def get_unique_senators_with_links(municipalities: list[tuple[str, str, str, str
     for _district, _town, member, _party, profile_link in municipalities:
         if member not in senator_links:
             senator_links[member] = []
+
         if profile_link:
             senator_links[member].append(profile_link)
 
@@ -297,10 +309,12 @@ def write_data(filename: str, column_names: tuple, senators: list[tuple]) -> Non
     if all(len(senator_data) is column_count for senator_data in senators):
         err_msg = f"All rows must have the same number of columns as `column_names` (len({column_names}))."
         raise ValueError(err_msg)
+
     with Path(filename).open(mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerows([column_names])
         writer.writerows(senators)
+
     logger.info("CSV file '%s' has been created with %s municipalities.", filename, len(senators))
 
 

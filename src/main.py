@@ -275,7 +275,7 @@ def scrape_all_unique_senators(http: urllib3.PoolManager, unique_senators: dict[
     return senator_details
 
 
-def scrape_all(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str, str, str, str]]:
+def scrape_all(http: urllib3.PoolManager) -> list[tuple[str, ...]]:
     """
     Load and parse the single-page State Senate listing of all municipalities.
 
@@ -300,13 +300,12 @@ def scrape_all(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str,
             err_msg = f"No details found for {member}."
             raise SenatorScraperError(err_msg)
 
-        email, home_phone, state_house_phone, committees = details
-        senators.append((district, town, member, party, email, home_phone, state_house_phone, committees))
+        senators.append((district, town, member, party, *details))
 
     return senators
 
 
-def write_data(filename: str, column_names: list[str], senators: list[tuple[str, str, str, str, str, str, str, str]]) -> None:
+def write_data(filename: str, column_names: list[str], senators: list[tuple[str, ...]]) -> None:
     """Write collected data to a CSV file."""
     header_column_count = len(column_names)
     if not all(len(senator_data) == header_column_count for senator_data in senators):

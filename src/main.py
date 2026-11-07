@@ -309,7 +309,7 @@ def scrape_all(http: urllib3.PoolManager) -> list[tuple[str, str, str, str, str,
 def write_data(filename: str, column_names: list[str], senators: list[tuple[str, str, str, str, str, str, str, str]]) -> None:
     """Write collected data to a CSV file."""
     header_column_count = len(column_names)
-    if all(len(senator_data) == header_column_count for senator_data in senators):
+    if not all(len(senator_data) == header_column_count for senator_data in senators):
         err_msg = f"All rows must have the same number of columns as `column_names` ({header_column_count})."
         raise ValueError(err_msg)
 

@@ -221,7 +221,7 @@ def collect_municipalities_with_senators(http: urllib3.PoolManager) -> list[tupl
             continue
 
         senator_link = p_tag.find("a", href=True)
-        profile_link = senator_link["href"] if senator_link and isinstance(senator_link, Tag) else ""
+        profile_link = senator_link["href"].lower() if senator_link and isinstance(senator_link, Tag) else ""
 
         municipalities.append((district, town, member, party, profile_link))
 
@@ -241,7 +241,7 @@ def get_unique_senators_with_links(municipalities: list[tuple[str, str, str, str
             senator_links[member] = []
 
         if profile_link:
-            senator_links[member].append(profile_link.lower())
+            senator_links[member].append(profile_link)
 
     # For each senator, choose the most common link as there are typos sometimes
     unique_senators = {}

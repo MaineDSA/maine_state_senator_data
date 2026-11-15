@@ -22,7 +22,7 @@ class TestCollectMunicipalitiesWithSenators:
                 </div>
                 """,
                 [
-                    ("4", "Abbot", "Stacey K. Guerin", "R", "/District4"),
+                    ("4", "Abbot", "Stacey K. Guerin", "R", "/district4"),
                     ("22", "Acton", "James D. Libby", "R", "/district22"),
                     ("9", "Bangor", "Joseph M. Baldacci", "D", "/district9"),
                 ],
@@ -35,7 +35,7 @@ class TestCollectMunicipalitiesWithSenators:
                     <p>Abbot - Senate District 4 - <a href="/District4">Stacey K. Guerin</a> (R-Penobscot)</p>
                 </div>
                 """,
-                [("4", "Abbot", "Stacey K. Guerin", "R", "/District4")],
+                [("4", "Abbot", "Stacey K. Guerin", "R", "/district4")],
             ),
             (
                 """

@@ -1,4 +1,3 @@
-import re
 from collections.abc import Callable
 from pathlib import Path
 
@@ -65,6 +64,6 @@ def mocked_poolmanager(urllib3_mock: Urllib3Mock, muni_page: str, detail_example
     )
     for district_no, district_content in detail_examples.items():
         request_url = f"https://{SenateURL.StateLegislatureNetloc}/district{district_no}"
-        urllib3_mock.add_response(method="GET", url=re.compile(request_url), content=district_content.encode("utf-8"), is_reusable=True)
+        urllib3_mock.add_response(method="GET", url=request_url, content=district_content.encode("utf-8"), is_reusable=True)
 
     return urllib3.PoolManager()
